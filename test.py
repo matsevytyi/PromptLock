@@ -1,4 +1,6 @@
-from generate_prompt import create_llm_client, generate_prompt, generate_lua_script
+from generate_prompt import generate_prompt
+from generate_lua import generate_lua_script
+from LLMFactory import create_llm_client
 from dotenv import load_dotenv
 import os
 
@@ -10,6 +12,22 @@ GROQ_API_KEY = os.getenv("GROQ")
 #client = create_llm_client("ollama", model="deepseek-coder:6.7b")
 client = create_llm_client("groq", api_key=GROQ_API_KEY, model="llama-3.1-8b-instant")
 
+metadata = {
+    "os": "MacOS",
+    "arch": "arm64",
+    "errors_messages": """
+ """
+}
+
+prompt = generate_prompt(metadata)
+
+response = client.generate(prompt)
+
+script = generate_lua_script(response["response"])
+
+print("response:", script)
+
+## Eventual metadata as one of examples:
 metadata = {
     "os": "MacOS",
     "arch": "arm64",
@@ -48,13 +66,3 @@ metadata = {
     table: 0x600001898c00
  """
 }
-
-prompt = generate_prompt(metadata)
-
-
-
-response = client.generate(prompt)
-
-script = generate_lua_script(response["response"])
-
-print("response:", script)

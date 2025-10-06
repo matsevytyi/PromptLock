@@ -1,0 +1,10 @@
+Помилка: AttributeError
+Деталі: 'dict' object has no attribute 'lower'
+
+Трейсбек:
+Traceback (most recent call last):
+  File "/Users/andriimatsevytyi/Downloads/PromptLock/orchestrator.py", line 438, in main
+    prompt = generate_prompt(system_info)
+  File "/Users/andriimatsevytyi/Downloads/PromptLock/generate_prompt.py", line 27, in generate_prompt
+    target_os = safe_metadata.get('os', 'unknown').lower()
+AttributeError: 'dict' object has no attribute 'lower'
