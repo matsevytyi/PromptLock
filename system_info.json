@@ -1,0 +1,35 @@
+{
+  "os": {
+    "system": "Darwin",
+    "release": "24.3.0",
+    "version": "Darwin Kernel Version 24.3.0: Thu Jan  2 20:24:16 PST 2025; root:xnu-11215.81.4~3/RELEASE_ARM64_T6000",
+    "machine": "arm64",
+    "processor": "arm",
+    "architecture": "64bit",
+    "node": "MacBook-Pro-Andrii.local"
+  },
+  "python": {
+    "version": "3.10.9",
+    "implementation": "CPython"
+  },
+  "cpu": {
+    "processor": "arm",
+    "machine": "arm64"
+  },
+  "platform_specific": {
+    "model": "MacBook Pro",
+    "processor": "Apple M1 Pro",
+    "cores": "10 (8 performance and 2 efficiency)",
+    "memory": "16 GB",
+    "disk": {
+      "total": "460Gi",
+      "used": "15Gi",
+      "available": "26Gi"
+    }
+  },
+  "locale": {
+    "language": "unknown",
+    "encoding": "unknown"
+  },
+  "timestamp": "2025-10-06T11:37:12.304351"
+}
