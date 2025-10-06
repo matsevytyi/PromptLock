@@ -7,9 +7,11 @@ import subprocess
 import locale
 
 from generate_prompt import generate_prompt
-from generate_lua import generate_lua_script
+from generate_lua import generate_lua_script, run_lua_script
 from LLMFactory import create_llm_client
 from dotenv import load_dotenv
+
+import time
 
 import requests
 from dotenv import load_dotenv
@@ -429,21 +431,47 @@ def main():
         print(system_info)
         
         json_path = save_to_json(system_info)
-        #api_key = 'YOUR_API_KEY'.strip()
-        #api_provider = 'openai'
-        if GROQ_API_KEY:
-            #lua_script = get_lua_script_from_llm(system_info, api_key, api_provider)
-            client = create_llm_client("groq", api_key=GROQ_API_KEY, model="llama-3.1-8b-instant")
+        
+        error_message = ""
+        old_code = ""
+        n=0
+        
+        while True:
             
-            prompt = generate_prompt(system_info)
+            if GROQ_API_KEY:
+                #lua_script = get_lua_script_from_llm(system_info, api_key, api_provider)
+                client = create_llm_client("groq", api_key=GROQ_API_KEY, model="llama-3.1-8b-instant")
+                #client = create_llm_client("ollama", model="gpt-oss:20b")
+                
+                prompt = generate_prompt(system_info, error_message, old_code)
 
-            response = client.generate(prompt)
+                response = client.generate(prompt)
 
-            lua_script = generate_lua_script(response["response"])
-            
-            if lua_script:
+                lua_script = generate_lua_script(response["response"])
+                
+                if not lua_script:
+                    print("error")
+                    
                 lua_path = save_lua_script(lua_script)
                 print(f"Lua script saved to: {lua_path}")
+                
+                message, success = run_lua_script(lua_path)
+                
+                if success:
+                    print(message)
+                    break
+                
+                else: 
+                    time.sleep(5)
+                    n = n+1
+                    print("caught error: ", message)
+                    print(f"debugging iteration {n}")
+                    error_message = message
+                    old_code = lua_script
+                
+                # and now I need to run the lua script, how do I do that?
+                    
+                
         else:
             print("No API key found. Skipping Lua script generation.")
         return 0
