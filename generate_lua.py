@@ -50,6 +50,10 @@ def generate_lua_script(llm_response: str) -> str:
 
     if missing:
         logger.warning(f"Missing components: {missing}")
+        
+        
+    # if script starts with `, I want everything before ` to be removed
+    lua_code = lua_code.split('```')[0]
 
     # Length validation
     # if len(lua_code) > 8000:

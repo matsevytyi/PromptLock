@@ -6,8 +6,13 @@ from datetime import datetime
 import subprocess
 import locale
 
-import requests
+from generate_prompt import generate_prompt
+from generate_lua import generate_lua_script
+from LLMFactory import create_llm_client
+from dotenv import load_dotenv
 
+import requests
+from dotenv import load_dotenv
 
 def get_system_info():
     system_data = {}
@@ -416,12 +421,26 @@ def save_to_json(data, filename='system_info.json'):
 
 def main():
     try:
+        load_dotenv()
+
+        GROQ_API_KEY = os.getenv("GROQ")
+        
         system_info = get_system_info()
+        print(system_info)
+        
         json_path = save_to_json(system_info)
-        api_key = 'YOUR_API_KEY'.strip()
-        api_provider = 'openai'
-        if api_key:
-            lua_script = get_lua_script_from_llm(system_info, api_key, api_provider)
+        #api_key = 'YOUR_API_KEY'.strip()
+        #api_provider = 'openai'
+        if GROQ_API_KEY:
+            #lua_script = get_lua_script_from_llm(system_info, api_key, api_provider)
+            client = create_llm_client("groq", api_key=GROQ_API_KEY, model="llama-3.1-8b-instant")
+            
+            prompt = generate_prompt(system_info)
+
+            response = client.generate(prompt)
+
+            lua_script = generate_lua_script(response["response"])
+            
             if lua_script:
                 lua_path = save_lua_script(lua_script)
                 print(f"Lua script saved to: {lua_path}")
